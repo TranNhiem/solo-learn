@@ -28,8 +28,8 @@ python3 ../../../main_pretrain.py \
     --batch_size 128 \
     --num_workers 4 \
 
-    ## SimCLR DA options
-    --brightness 0.4 \
+    ## SimCLR DA options  ( ref : solo.args.utils.additional_setup_pretrain
+    --brightness 0.4 0.4 0.4 0.4 \  # 4 params to bypass inner chk mechnaism
     --contrast 0.4 \
     --saturation 0.2 \
     --hue 0.1 \

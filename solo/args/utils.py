@@ -28,6 +28,9 @@ N_CLASSES_PER_DATASET = {
     "stl10": 10,
     "imagenet": 1000,
     "imagenet100": 100,
+
+    ## cfg same as imagenet
+    "mulda": 1000,
 }
 
 
@@ -181,6 +184,27 @@ def additional_setup_pretrain(args: Namespace):
         # find number of big/small crops
         args.num_large_crops = args.num_crops_per_aug[0]
         args.num_small_crops = 0
+
+
+    ## Pluggin support : I prepare this kind of bypass setting
+    #   namely, re-assign the args.transform_kwargs
+    args.transform_kwargs = dict(
+        brightness=args.brightness[0],
+        contrast=args.contrast[0],
+        saturation=args.saturation[0],
+        hue=args.hue[0],
+        color_jitter_prob=args.color_jitter_prob[0],
+        gray_scale_prob=args.gray_scale_prob[0],
+        horizontal_flip_prob=args.horizontal_flip_prob[0],
+        gaussian_prob=args.gaussian_prob[0],
+        solarization_prob=args.solarization_prob[0],
+        crop_size=args.crop_size[0],
+        min_scale=args.min_scale[0],
+        max_scale=args.max_scale[0],
+    )
+    #########################
+
+
 
     # add support for custom mean and std
     if args.dataset == "custom":
