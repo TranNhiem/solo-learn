@@ -77,18 +77,21 @@ def main():
     # pretrain dataloader
     if not args.dali:
         # asymmetric augmentations
-        if args.unique_augs > 1:
-            transform = [
-                prepare_transform(args.dataset, **kwargs) for kwargs in args.transform_kwargs
-            ]
+        if args.unique_augs > 1:  # note : --brightness 0.4 0.4 0.4 0.4 \  # 4 params to bypass inner chk mechnaism in sh file
+            # pluggin proposed multiple-DA
+            if args.dataset == "mulda":
+                transform = prepare_transform(args.dataset, **args.transform_kwargs) 
+            else: # normal case, this way plz ~ ~
+                transform = [
+                    prepare_transform(args.dataset, **kwargs) for kwargs in args.transform_kwargs
+                ]
         else:
             transform = [prepare_transform(args.dataset, **args.transform_kwargs)]
             
 
 
-        # pluggin proposed multiple-DA
-        if args.dataset == "mulda":
-            transform = prepare_transform(args.dataset, **args.transform_kwargs) 
+        
+        
 
 
 
