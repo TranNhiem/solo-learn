@@ -25,7 +25,7 @@ from pytorch_lightning.callbacks import LearningRateMonitor
 from pytorch_lightning.loggers import WandbLogger
 
 from solo.args.setup import parse_args_pretrain
-from solo.methods import METHODS
+from solo.methods import byol
 from solo.utils.auto_resumer import AutoResumer
 
 try:
