@@ -35,6 +35,8 @@ def dataset_args(parser: ArgumentParser):
         "imagenet",
         "imagenet100",
         "custom",
+        # pluggin support
+        "mulda",
     ]
 
     parser.add_argument("--dataset", choices=SUPPORTED_DATASETS, type=str, required=True)
@@ -98,3 +100,4 @@ def custom_dataset_args(parser: ArgumentParser):
     # for custom dataset
     parser.add_argument("--mean", type=float, default=[0.485, 0.456, 0.406], nargs="+")
     parser.add_argument("--std", type=float, default=[0.228, 0.224, 0.225], nargs="+")
+

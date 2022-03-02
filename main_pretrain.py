@@ -83,6 +83,14 @@ def main():
             ]
         else:
             transform = [prepare_transform(args.dataset, **args.transform_kwargs)]
+            
+
+
+        # pluggin proposed multiple-DA
+        if args.dataset == "mulda":
+            transform = prepare_transform(args.dataset, **args.transform_kwargs) 
+
+
 
         transform = prepare_n_crop_transform(transform, num_crops_per_aug=args.num_crops_per_aug)
         if args.debug_augmentations:
@@ -103,7 +111,10 @@ def main():
     # normal dataloader for when it is available
     if args.dataset == "custom" and (args.no_labels or args.val_dir is None):
         val_loader = None
-    elif args.dataset in ["imagenet100", "imagenet"] and args.val_dir is None:
+
+    ## pluggin proposed multiple-DA
+    # i'm not sure about the below line, but i also add our ds into it!!
+    elif args.dataset in ["imagenet100", "imagenet",   "mulda"] and args.val_dir is None:
         val_loader = None
     else:
         _, val_loader = prepare_data_classification(

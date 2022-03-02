@@ -30,6 +30,9 @@ from torch.utils.data.dataset import Dataset
 from torchvision import transforms
 from torchvision.datasets import STL10, ImageFolder
 
+# pluggin multiple DA support
+from torchvision.transforms import autoaugment as auto_aug
+from Fast_Auto_Augment.Fast_AutoAugment import Fast_AutoAugment
 
 def dataset_with_index(DatasetClass: Type[Dataset]) -> Type[Dataset]:
     """Factory for datasets that also returns the data index.
@@ -446,6 +449,18 @@ def prepare_transform(dataset: str, **kwargs) -> Any:
         return ImagenetTransform(**kwargs)
     elif dataset == "custom":
         return CustomTransform(**kwargs)
+    # pluggin proposed multiple-DA
+    elif dataset == "mulda":
+        ## DA args def :
+        aa_policy = auto_aug.AutoAugmentPolicy.IMAGENET
+        auto_da = transforms.Compose( [auto_aug.AutoAugment(policy=aa_policy), transforms.ToTensor()] )
+        rand_da = transforms.Compose( [auto_aug.RandAugment(num_ops=2, magnitude=9), transforms.ToTensor()] )
+        fast_da = Fast_AutoAugment().get_trfs()
+        # args cp from simclr.sh file
+        simclr_da = {'brightness':0.8, 'contrast':0.8, 'saturation':0.8, 'hue':0.2}
+        
+        #  ret [simclr_da, rand_da, auto_da, fast_da]  4 views trfs
+        return [CustomTransform(**simclr_da), rand_da, auto_da, fast_da]
     else:
         raise ValueError(f"{dataset} is not currently supported.")
 
@@ -493,7 +508,6 @@ def prepare_datasets(
     Returns:
         Dataset: the desired dataset with transformations.
     """
-
     if data_dir is None:
         sandbox_folder = Path(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
         data_dir = sandbox_folder / "datasets"
@@ -533,6 +547,12 @@ def prepare_datasets(
             dataset_class = ImageFolder
 
         train_dataset = dataset_with_index(dataset_class)(train_dir, transform)
+    
+    ## pluggin support code snippet
+    #  only support imagenet/imagenet100 ds
+    elif dataset == "mulda":
+        train_dir = data_dir / train_dir
+        train_dataset = dataset_with_index(ImageFolder)(train_dir, transform)
 
     return train_dataset
 
