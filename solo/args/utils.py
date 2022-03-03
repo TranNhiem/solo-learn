@@ -128,7 +128,7 @@ def additional_setup_pretrain(args: Namespace):
             setattr(args, p, getattr(args, p) * unique_augs)
 
     args.unique_augs = unique_augs
-
+    print(f'{args.unique_augs} should equal == 4, the below if-cond triggre')
     if unique_augs > 1:
         args.transform_kwargs = [
             dict(
@@ -203,7 +203,6 @@ def additional_setup_pretrain(args: Namespace):
         # find number of big/small crops
         args.num_large_crops = args.num_crops_per_aug[0]
         args.num_small_crops = 0
-
 
     ## Pluggin support : I prepare this kind of bypass setting, even it's multiple args
     #   namely, re-assign the args.transform_kwargs
