@@ -72,8 +72,9 @@ def additional_setup_pretrain(args: Namespace):
         [optional]
         - gaussian_prob, solarization_prob: optional augmentations settings.
     """
+   
     additional_setup_mulda(args)
-    
+
     if args.dataset in N_CLASSES_PER_DATASET:
         args.num_classes = N_CLASSES_PER_DATASET[args.dataset]
     else:
@@ -100,8 +101,14 @@ def additional_setup_pretrain(args: Namespace):
             args.crop_size,
             args.min_scale,
             args.max_scale,
+            # args.rda_num_ops,
+            # args.rda_magnitude,
+            # args.ada_policy,
+            # args.fda_policy
+
         ]
     )
+    print(unique_augs)
     assert len(args.num_crops_per_aug) == unique_augs
 
     # assert that either all unique augmentation pipelines have a unique
@@ -119,16 +126,23 @@ def additional_setup_pretrain(args: Namespace):
         "crop_size",
         "min_scale",
         "max_scale",
+        "rda_num_ops",
+        "rda_magnitude",
+        "ada_policy",
+        "fda_policy"
     ]:
         values = getattr(args, p)
         n = len(values)
+        print(unique_augs)
         assert n == unique_augs or n == 1
 
         if n == 1:
             setattr(args, p, getattr(args, p) * unique_augs)
 
     args.unique_augs = unique_augs
-    print(f'{args.unique_augs} should equal == 4, the below if-cond triggre')
+
+    
+
     if unique_augs > 1:
         args.transform_kwargs = [
             dict(
@@ -184,6 +198,7 @@ def additional_setup_pretrain(args: Namespace):
                 num_small_crops += n_crops
         args.num_large_crops = num_large_crops
         args.num_small_crops = num_small_crops
+        
     else:
         args.transform_kwargs = dict(
             brightness=args.brightness[0],
@@ -252,7 +267,7 @@ def additional_setup_pretrain(args: Namespace):
 
     if args.dali:
         # adding mulda for dali dataloader
-        assert args.dataset in ["imagenet100", "imagenet", "custom", "mulda"]
+        assert args.dataset in ["imagenet100", "imagenet", "custom", ]
 
     args.extra_optimizer_args = {}
     if args.optimizer == "sgd":

@@ -73,6 +73,17 @@ def parse_args_pretrain() -> argparse.Namespace:
     parser.add_argument("--save_checkpoint", action="store_true")
     parser.add_argument("--auto_umap", action="store_true")
     parser.add_argument("--auto_resume", action="store_true")
+
+    parser.add_argument("--rda_num_ops",  type=int, default=2)
+    parser.add_argument("--rda_magnitude",  type=int, default=10)
+    parser.add_argument("--ada_policy",  type=str, default="imagenet")
+    parser.add_argument("--fda_policy",  type=str, default="imagenet")
+    # parser.add_argument("--num_large_crops",  type=int, default=4)
+    # parser.add_argument("--num_small_crops",  type=int, default=0)
+    # parser.add_argument("--num_classes",  type=int, default=1000)
+    # parser.add_argument("--backbone_args",  type=str, default="resnet50")
+    # parser.add_argument("--extra_optimizer_args",  type=str, default="LARS")
+
     temp_args, _ = parser.parse_known_args()
 
     # optionally add checkpointer and AutoUMAP args
@@ -87,6 +98,8 @@ def parse_args_pretrain() -> argparse.Namespace:
 
     # parse args
     args = parser.parse_args()
+
+
 
     # prepare arguments with additional setup
     additional_setup_pretrain(args)

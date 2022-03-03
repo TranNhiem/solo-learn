@@ -28,8 +28,8 @@ python3 ../../../main_pretrain.py \
     --color_jitter_prob 0.8 \
     --gray_scale_prob 0.2 \
     --horizontal_flip_prob 0.5 \
-    --gaussian_prob 1.0 0.1 \
-    --solarization_prob 0.0 0.2 \
+    --gaussian_prob 1.0 \
+    --solarization_prob 0.0 \
     --crop_size 224 \
     --min_scale 0.08 \
     --max_scale 1.0 \
@@ -43,7 +43,7 @@ python3 ../../../main_pretrain.py \
     --project solo_MASSL \
     --wandb \
     --save_checkpoint \
-    --method byol \
+    --method massl \
     --proj_output_dim 256 \
     --proj_hidden_dim 4096 \
     --pred_hidden_dim 4096 \
@@ -51,5 +51,4 @@ python3 ../../../main_pretrain.py \
     --final_tau_momentum 1.0 \
     --momentum_classifier \
     --checkpoint_dir /data1/solo_MASSL_ckpt \
-
     --checkpoint_frequency 10
