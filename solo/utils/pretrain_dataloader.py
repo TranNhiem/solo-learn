@@ -431,7 +431,7 @@ class CustomTransform(BaseTransform):
         )
 
 
-def prepare_transform(dataset: str, **kwargs) -> Any:
+def prepare_transform(dataset: str, trfs_kwargs, da_kwargs=None) -> Any:
     """Prepares transforms for a specific dataset. Optionally uses multi crop.
 
     Args:
@@ -442,25 +442,30 @@ def prepare_transform(dataset: str, **kwargs) -> Any:
     """
 
     if dataset in ["cifar10", "cifar100"]:
-        return CifarTransform(cifar=dataset, **kwargs)
+        return CifarTransform(cifar=dataset, **trfs_kwargs)
     elif dataset == "stl10":
-        return STLTransform(**kwargs)
+        return STLTransform(**trfs_kwargs)
     elif dataset in ["imagenet", "imagenet100"]:
-        return ImagenetTransform(**kwargs)
+        return ImagenetTransform(**trfs_kwargs)
     elif dataset == "custom":
-        return CustomTransform(**kwargs)
+        return CustomTransform(**trfs_kwargs)
+
     # pluggin proposed multiple-DA
     elif dataset == "mulda":
+        policy_dict = {'imagenet':auto_aug.AutoAugmentPolicy.IMAGENET}
         ## DA args def :
-        aa_policy = auto_aug.AutoAugmentPolicy.IMAGENET
-        auto_da = transforms.Compose( [auto_aug.AutoAugment(policy=aa_policy), transforms.ToTensor()] )
-        rand_da = transforms.Compose( [auto_aug.RandAugment(num_ops=2, magnitude=9), transforms.ToTensor()] )
-        fast_da = Fast_AutoAugment().get_trfs()
-        # args cp from simclr.sh file
-        simclr_da = {'brightness':0.8, 'contrast':0.8, 'saturation':0.8, 'hue':0.2}
-        
+        num_ops, magnitude = da_kwargs['rda_num_ops'], da_kwargs['rda_magnitude']
+        ada_policy = policy_dict[ da_kwargs['ada_policy'] ]
+        fda_policy = da_kwargs['fda_policy']
+
+        # prepare various da
+        auto_da = transforms.Compose( [auto_aug.AutoAugment(policy=ada_policy), transforms.ToTensor()] )
+        rand_da = transforms.Compose( [auto_aug.RandAugment(num_ops=num_ops, magnitude=magnitude), transforms.ToTensor()] )
+        fast_da = Fast_AutoAugment(policy_type=fda_policy).get_trfs()
+
         #  ret [simclr_da, rand_da, auto_da, fast_da]  4 views trfs
-        return [CustomTransform(**simclr_da), rand_da, auto_da, fast_da]
+        return [ CustomTransform(**trfs_kwargs), rand_da, auto_da, fast_da]
+        
     else:
         raise ValueError(f"{dataset} is not currently supported.")
 

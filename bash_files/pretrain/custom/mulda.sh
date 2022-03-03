@@ -29,7 +29,7 @@ python3 ../../../main_pretrain.py \
     --num_workers 4 \
 
     ## SimCLR DA options  ( ref : solo.args.utils.additional_setup_pretrain
-    --brightness 0.4 0.4 0.4 0.4 \  # 4 params to bypass inner chk mechnaism
+    --brightness 0.4 0.4 0.4 0.4 \  # 4 params to bypass inner chk mechnaism, just cp same params 4 times
     --contrast 0.4 \
     --saturation 0.2 \
     --hue 0.1 \
@@ -38,11 +38,15 @@ python3 ../../../main_pretrain.py \
     --horizontal_flip_prob 0.5 \
     --gaussian_prob 1.0 0.1 \
     --solarization_prob 0.0 0.2 \
+    --crop_size 224 \
+    --min_scale 0.08 \
+    --max_scale 1.0 \
 
     ## multiple-DA options
-    -- \
-    -- \
-    -- \
+    --rda_num_ops 2 \
+    --rda_magnitude 9 \
+    --ada_policy imagenet \
+    --fda_policy imagenet \
 
     # 4 view with diff trfs
     --num_crops_per_aug 1 1 1 1 \

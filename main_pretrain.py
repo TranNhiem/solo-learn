@@ -75,18 +75,19 @@ def main():
     model = MethodClass(**args.__dict__)
 
     # pretrain dataloader
+    # note that, to support plugin, i modify the prepare_transform func (i didn't unpack the dict!!)
     if not args.dali:
         # asymmetric augmentations
         if args.unique_augs > 1:  # note : --brightness 0.4 0.4 0.4 0.4 \  # 4 params to bypass inner chk mechnaism in sh file
             # pluggin proposed multiple-DA
             if args.dataset == "mulda":
-                transform = prepare_transform(args.dataset, **args.transform_kwargs) 
+                transform = prepare_transform(args.dataset, args.transform_kwargs, args.mulda_kwargs) 
             else: # normal case, this way plz ~ ~
                 transform = [
-                    prepare_transform(args.dataset, **kwargs) for kwargs in args.transform_kwargs
+                    prepare_transform(args.dataset, kwargs) for kwargs in args.transform_kwargs
                 ]
         else:
-            transform = [prepare_transform(args.dataset, **args.transform_kwargs)]
+            transform = [prepare_transform(args.dataset, args.transform_kwargs)]
             
 
 
