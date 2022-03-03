@@ -61,7 +61,8 @@ def main():
     args = parse_args_pretrain()
 
     assert args.method in METHODS, f"Choose from {METHODS.keys()}"
-
+    #args.method=="massl"
+    print(args.num_large_crops)
     if args.num_large_crops != 2:
         ## Adding for multi-Views
         assert args.method in METHODS#=="wmse"

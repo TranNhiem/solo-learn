@@ -73,7 +73,7 @@ def additional_setup_pretrain(args: Namespace):
         - gaussian_prob, solarization_prob: optional augmentations settings.
     """
    
-    #additional_setup_mulda(args)
+    additional_setup_mulda(args)
 
     if args.dataset in N_CLASSES_PER_DATASET:
         args.num_classes = N_CLASSES_PER_DATASET[args.dataset]
@@ -108,6 +108,7 @@ def additional_setup_pretrain(args: Namespace):
 
         ]
     )
+    print(unique_augs)
     assert len(args.num_crops_per_aug) == unique_augs
 
     # assert that either all unique augmentation pipelines have a unique
@@ -132,6 +133,7 @@ def additional_setup_pretrain(args: Namespace):
     ]:
         values = getattr(args, p)
         n = len(values)
+        print(unique_augs)
         assert n == unique_augs or n == 1
 
         if n == 1:

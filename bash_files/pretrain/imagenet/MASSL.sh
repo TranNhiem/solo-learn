@@ -43,7 +43,7 @@ python3 ../../../main_pretrain.py \
     --project solo_MASSL \
     --wandb \
     --save_checkpoint \
-    --method byol \
+    --method massl \
     --proj_output_dim 256 \
     --proj_hidden_dim 4096 \
     --pred_hidden_dim 4096 \
