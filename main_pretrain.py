@@ -64,7 +64,7 @@ def main():
 
     if args.num_large_crops != 2:
         ## Adding for multi-Views
-        assert args.method == METHODS
+        assert args.method in METHODS
 
     MethodClass = METHODS[args.method]
     if args.dali:

@@ -251,7 +251,8 @@ def additional_setup_pretrain(args: Namespace):
         del args.patch_size
 
     if args.dali:
-        assert args.dataset in ["imagenet100", "imagenet", "custom"]
+        # adding mulda for dali dataloader
+        assert args.dataset in ["imagenet100", "imagenet", "custom", "mulda"]
 
     args.extra_optimizer_args = {}
     if args.optimizer == "sgd":

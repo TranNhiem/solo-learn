@@ -29,7 +29,7 @@ python3 ../../../main_pretrain.py \
     --solarization_prob 0.0 0.2 \
     --num_crops_per_aug 1 1 \
     --name byol-resnet50-imagenet-300ep \
-    --entity mlbrl \
+    --entity tranrick \
     --project solo_MASSL \
     --wandb \
     --save_checkpoint \

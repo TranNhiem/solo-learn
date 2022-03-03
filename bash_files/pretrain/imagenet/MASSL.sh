@@ -1,5 +1,5 @@
 python3 ../../../main_pretrain.py \
-    --dataset imagenet \
+    --dataset mulda \
     --backbone resnet50 \
     --data_dir /data1/1K_New \
     --train_dir train \
@@ -27,7 +27,7 @@ python3 ../../../main_pretrain.py \
     --hue 0.1 \
     --gaussian_prob 1.0 0.1 \
     --solarization_prob 0.0 0.2 \
-    --num_crops_per_aug 1 1 \
+    --num_crops_per_aug 2 2 \
     --name byol-resnet50-imagenet-300ep \
     --entity tranrick \
     --project solo_MASSL \
