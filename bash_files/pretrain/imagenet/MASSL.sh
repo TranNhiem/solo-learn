@@ -51,5 +51,4 @@ python3 ../../../main_pretrain.py \
     --final_tau_momentum 1.0 \
     --momentum_classifier \
     --checkpoint_dir /data1/solo_MASSL_ckpt \
-
     --checkpoint_frequency 10
