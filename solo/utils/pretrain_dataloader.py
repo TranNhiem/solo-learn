@@ -32,7 +32,7 @@ from torchvision.datasets import STL10, ImageFolder
 
 # pluggin multiple DA support
 from torchvision.transforms import autoaugment as auto_aug
-from Fast_Auto_Augment.Fast_AutoAugment import Fast_AutoAugment
+from solo.utils.Fast_Auto_Augment.Fast_AutoAugment import Fast_AutoAugment
 
 def dataset_with_index(DatasetClass: Type[Dataset]) -> Type[Dataset]:
     """Factory for datasets that also returns the data index.

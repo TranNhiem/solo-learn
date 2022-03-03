@@ -63,7 +63,8 @@ def main():
     assert args.method in METHODS, f"Choose from {METHODS.keys()}"
 
     if args.num_large_crops != 2:
-        assert args.method == "wmse"
+        ## Adding for multi-Views
+        assert args.method == METHODS
 
     MethodClass = METHODS[args.method]
     if args.dali:
