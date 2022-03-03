@@ -34,6 +34,24 @@ N_CLASSES_PER_DATASET = {
 }
 
 
+## pluggin support
+def additional_setup_mulda(args: Namespace):
+    for p in [
+        "rda_num_ops",
+        "rda_magnitude",
+        "ada_policy",
+        "fda_policy"
+    ]:
+        setattr(args, p, getattr(args, p))
+
+    args.mulda_kwargs = dict(
+        rda_num_ops=args.rda_num_ops,
+        rda_magnitude=args.rda_magnitude,
+        ada_policy=args.ada_policy,
+        fda_policy=args.fda_policy
+    )
+
+
 def additional_setup_pretrain(args: Namespace):
     """Provides final setup for pretraining to non-user given parameters by changing args.
 
@@ -186,7 +204,7 @@ def additional_setup_pretrain(args: Namespace):
         args.num_small_crops = 0
 
 
-    ## Pluggin support : I prepare this kind of bypass setting
+    ## Pluggin support : I prepare this kind of bypass setting, even it's multiple args
     #   namely, re-assign the args.transform_kwargs
     args.transform_kwargs = dict(
         brightness=args.brightness[0],
