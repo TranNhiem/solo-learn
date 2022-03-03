@@ -108,7 +108,7 @@ def additional_setup_pretrain(args: Namespace):
 
         ]
     )
-    print(unique_augs)
+    #print(unique_augs)
     assert len(args.num_crops_per_aug) == unique_augs
 
     # assert that either all unique augmentation pipelines have a unique
@@ -126,14 +126,14 @@ def additional_setup_pretrain(args: Namespace):
         "crop_size",
         "min_scale",
         "max_scale",
-        "rda_num_ops",
-        "rda_magnitude",
-        "ada_policy",
-        "fda_policy"
+        # "rda_num_ops",
+        # "rda_magnitude",
+        # "ada_policy",
+        # "fda_policy"
     ]:
         values = getattr(args, p)
         n = len(values)
-        print(unique_augs)
+        #print(unique_augs)
         assert n == unique_augs or n == 1
 
         if n == 1:

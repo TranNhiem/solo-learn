@@ -1,7 +1,7 @@
 python3 ../../../main_pretrain.py \
     --dataset mulda \
     --backbone resnet50 \
-    --data_dir /data1/1K_New \
+    --data_dir /data/ \
     --train_dir train \
     --val_dir val \
     --max_epochs 300 \
@@ -19,7 +19,7 @@ python3 ../../../main_pretrain.py \
     --accumulate_grad_batches 1 \
     --classifier_lr 0.2 \
     --weight_decay 1e-6 \
-    --batch_size 512 \
+    --batch_size 256 \
     --num_workers 4 \
     --brightness 0.4 0.4 0.4 0.4 \
     --contrast 0.4 \
@@ -28,8 +28,8 @@ python3 ../../../main_pretrain.py \
     --color_jitter_prob 0.8 \
     --gray_scale_prob 0.2 \
     --horizontal_flip_prob 0.5 \
-    --gaussian_prob 1.0 \
-    --solarization_prob 0.0 \
+    --gaussian_prob 1.0  \
+    --solarization_prob 0.0  \
     --crop_size 224 \
     --min_scale 0.08 \
     --max_scale 1.0 \
@@ -37,9 +37,9 @@ python3 ../../../main_pretrain.py \
     --rda_magnitude 9 \
     --ada_policy imagenet \
     --fda_policy imagenet \
-    --num_crops_per_aug 1 1 1 1 \
-    --name byol-resnet50-imagenet-300ep \
-    --entity tranrick \
+    --num_crops_per_aug 1 1 1 1\
+    --name MASSL-resnet50-imagenet-300ep \
+    --entity mlbrl \
     --project solo_MASSL \
     --wandb \
     --save_checkpoint \
@@ -51,4 +51,4 @@ python3 ../../../main_pretrain.py \
     --final_tau_momentum 1.0 \
     --momentum_classifier \
     --checkpoint_dir /data1/solo_MASSL_ckpt \
-    --checkpoint_frequency 10
+    --checkpoint_frequency 10 

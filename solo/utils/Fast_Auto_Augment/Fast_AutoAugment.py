@@ -4,6 +4,7 @@ import torchvision
 from torchvision.transforms import transforms
 from .searched_policies import fa_reduced_cifar10, fa_resnet50_rimagenet, fa_reduced_svhn
 from .transform_table import augment_list
+import random  
 
 
 class Augmentation(object):
@@ -20,8 +21,8 @@ class Augmentation(object):
                 img = self.apply_augment(img, name, level)
         return img
     
-    def apply_augment(img, name, level):
-        augment_fn, low, high = augment_dict[name]
+    def apply_augment(self, img, name, level):
+        augment_fn, low, high = self.augment_dict[name]
         return augment_fn(img.copy(), level * (high - low) + low) 
 
 
@@ -61,7 +62,8 @@ class Fast_AutoAugment(object):
 
         return ds_policies
 
-    def get_trfs(self):
+    def get_trfs(self, trfs):
+        self.trfs_cntr.transforms.insert(0, trfs)
         return self.trfs_cntr
 
 

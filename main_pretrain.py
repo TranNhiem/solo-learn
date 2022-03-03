@@ -62,10 +62,10 @@ def main():
 
     assert args.method in METHODS, f"Choose from {METHODS.keys()}"
     #args.method=="massl"
-    print(args.num_large_crops)
-    if args.num_large_crops != 2:
-        ## Adding for multi-Views
-        assert args.method in METHODS#=="wmse"
+    #print(args.num_large_crops)
+    # if args.num_large_crops != 2:
+    #     ## Adding for multi-Views
+    #     assert args.method in METHODS#=="wmse"
 
     MethodClass = METHODS[args.method]
     if args.dali:
@@ -96,7 +96,6 @@ def main():
         
 
 
-
         transform = prepare_n_crop_transform(transform, num_crops_per_aug=args.num_crops_per_aug)
         if args.debug_augmentations:
             print("Transforms:")
@@ -112,7 +111,7 @@ def main():
         train_loader = prepare_dataloader(
             train_dataset, batch_size=args.batch_size, num_workers=args.num_workers
         )
-
+    
     # normal dataloader for when it is available
     if args.dataset == "custom" and (args.no_labels or args.val_dir is None):
         val_loader = None
@@ -193,6 +192,18 @@ def main():
         callbacks=callbacks,
         enable_checkpointing=False,
     )
+
+
+    print("\n\nI'm in here \n\n")
+    # it's very not good... the issue occurs in train_loader, i'm not sure which da-method cause the img have invalid size
+    # while i will go deep into each trfs 'Composer'
+    # for x1, x2, x3, x4 in train_loader:
+    #     #print(im.shape)
+    #     # unpack
+    #     #x1, x2, x3, x4 = im
+    #     print(x1.shape)
+    #     break
+
 
     if args.dali:
         trainer.fit(model, val_dataloaders=val_loader, ckpt_path=ckpt_path)

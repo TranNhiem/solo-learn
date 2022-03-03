@@ -135,7 +135,6 @@ class NCropAugmentation:
         Returns:
             List[torch.Tensor]: an image in the tensor format.
         """
-
         return [self.transform(x) for _ in range(self.num_crops)]
 
     def __repr__(self) -> str:
@@ -157,8 +156,9 @@ class FullTransformPipeline:
         """
 
         out = []
-        for transform in self.transforms:
+        for idx, transform in enumerate(self.transforms):
             out.extend(transform(x))
+        
         return out
 
     def __repr__(self) -> str:
@@ -457,14 +457,20 @@ def prepare_transform(dataset: str, trfs_kwargs, da_kwargs=None) -> Any:
         num_ops, magnitude = da_kwargs['rda_num_ops'], da_kwargs['rda_magnitude']
         ada_policy = policy_dict[ da_kwargs['ada_policy'] ]
         fda_policy = da_kwargs['fda_policy']
-
+        # common crop settings : 
+        rnd_crp = transforms.RandomResizedCrop(
+            trfs_kwargs['crop_size'],
+            scale=(trfs_kwargs['min_scale'], trfs_kwargs['max_scale']),
+            interpolation=transforms.InterpolationMode.BICUBIC
+        )
         # prepare various da
-        auto_da = transforms.Compose( [auto_aug.AutoAugment(policy=ada_policy), transforms.ToTensor()] )
-        rand_da = transforms.Compose( [auto_aug.RandAugment(num_ops=num_ops, magnitude=magnitude), transforms.ToTensor()] )
-        fast_da = Fast_AutoAugment(policy_type=fda_policy).get_trfs()
-
+        auto_da = transforms.Compose( [rnd_crp, auto_aug.AutoAugment(policy=ada_policy), transforms.ToTensor()] )
+        
+        rand_da = transforms.Compose( [rnd_crp, auto_aug.RandAugment(num_ops=num_ops, magnitude=magnitude), transforms.ToTensor()] )
+        fast_da = Fast_AutoAugment(policy_type=fda_policy).get_trfs(rnd_crp)
+        
         #  ret [simclr_da, rand_da, auto_da, fast_da]  4 views trfs
-        return [ CustomTransform(**trfs_kwargs), rand_da, auto_da, fast_da]
+        return [ CustomTransform(**trfs_kwargs), rand_da, auto_da, rand_da ]#fast_da
         
     else:
         raise ValueError(f"{dataset} is not currently supported.")
