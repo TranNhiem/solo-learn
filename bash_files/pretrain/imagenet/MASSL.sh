@@ -40,6 +40,6 @@ python3 ../../../main_pretrain.py \
     --base_tau_momentum 0.99 \
     --final_tau_momentum 1.0 \
     --momentum_classifier \
-    --checkpoint_dir /data1/solo_baseline_ckpt \
+    --checkpoint_dir /data1/solo_MASSL_ckpt \
     --dali \
     --checkpoint_frequency 10
