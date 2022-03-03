@@ -26,10 +26,8 @@ python3 ../../../main_pretrain.py \
     --classifier_lr 0.1 \
     --weight_decay 1e-5 \
     --batch_size 128 \
-    --num_workers 4 \
-
-    ## SimCLR DA options  ( ref : solo.args.utils.additional_setup_pretrain
-    --brightness 0.4 0.4 0.4 0.4 \  # 4 params to bypass inner chk mechnaism, just cp same params 4 times
+    --num_workers 8 \
+    --brightness 0.4 0.4 0.4 0.4 \
     --contrast 0.4 \
     --saturation 0.2 \
     --hue 0.1 \
@@ -41,18 +39,13 @@ python3 ../../../main_pretrain.py \
     --crop_size 224 \
     --min_scale 0.08 \
     --max_scale 1.0 \
-
-    ## multiple-DA options
     --rda_num_ops 2 \
     --rda_magnitude 9 \
     --ada_policy imagenet \
     --fda_policy imagenet \
-
-    # 4 view with diff trfs
     --num_crops_per_aug 1 1 1 1 \
-
     --name byol-400ep-custom \
-    --entity unitn-mhug \
+    --entity tranrick \
     --project solo-learn \
     --wandb \
     --save_checkpoint \

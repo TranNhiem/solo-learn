@@ -20,14 +20,24 @@ python3 ../../../main_pretrain.py \
     --classifier_lr 0.2 \
     --weight_decay 1e-6 \
     --batch_size 512 \
-    --num_workers 8 \
-    --brightness 0.4 \
+    --num_workers 4 \
+    --brightness 0.4 0.4 0.4 0.4 \
     --contrast 0.4 \
     --saturation 0.2 \
     --hue 0.1 \
+    --color_jitter_prob 0.8 \
+    --gray_scale_prob 0.2 \
+    --horizontal_flip_prob 0.5 \
     --gaussian_prob 1.0 0.1 \
     --solarization_prob 0.0 0.2 \
-    --num_crops_per_aug 2 2 \
+    --crop_size 224 \
+    --min_scale 0.08 \
+    --max_scale 1.0 \
+    --rda_num_ops 2 \
+    --rda_magnitude 9 \
+    --ada_policy imagenet \
+    --fda_policy imagenet \
+    --num_crops_per_aug 1 1 1 1 \
     --name byol-resnet50-imagenet-300ep \
     --entity tranrick \
     --project solo_MASSL \
@@ -41,5 +51,5 @@ python3 ../../../main_pretrain.py \
     --final_tau_momentum 1.0 \
     --momentum_classifier \
     --checkpoint_dir /data1/solo_MASSL_ckpt \
-    --dali \
+
     --checkpoint_frequency 10

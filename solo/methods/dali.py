@@ -165,6 +165,8 @@ class PretrainABC(ABC):
             transform_pipeline = ImagenetTransform
         elif dataset == "custom":
             transform_pipeline = CustomTransform
+        elif dataset == "mulda":
+            print("Current Not Support --> Please Disable Dali")
         else:
             raise ValueError(dataset, "is not supported, used [imagenet, imagenet100 or custom]")
 

@@ -72,7 +72,8 @@ def additional_setup_pretrain(args: Namespace):
         [optional]
         - gaussian_prob, solarization_prob: optional augmentations settings.
     """
-
+    additional_setup_mulda(args)
+    
     if args.dataset in N_CLASSES_PER_DATASET:
         args.num_classes = N_CLASSES_PER_DATASET[args.dataset]
     else:
