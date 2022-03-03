@@ -28,8 +28,8 @@ python3 ../../../main_pretrain.py \
     --color_jitter_prob 0.8 \
     --gray_scale_prob 0.2 \
     --horizontal_flip_prob 0.5 \
-    --gaussian_prob 1.0 0.1 \
-    --solarization_prob 0.0 0.2 \
+    --gaussian_prob 1.0  \
+    --solarization_prob 0.0  \
     --crop_size 224 \
     --min_scale 0.08 \
     --max_scale 1.0 \
