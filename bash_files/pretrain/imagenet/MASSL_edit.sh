@@ -1,6 +1,5 @@
-python3 ../../../main_pretrain.py \
-    --dataset mulda \
-    --MASSL_new False \
+python3 ../../../main_pretrain_edit.py \
+    --dataset mulda_v1 \
     --backbone resnet50 \
     --data_dir /data/ \
     --train_dir train \
@@ -22,7 +21,7 @@ python3 ../../../main_pretrain.py \
     --weight_decay 1e-6 \
     --batch_size 256 \
     --num_workers 4 \
-    --brightness 0.4 0.4 0.4 0.4 \
+    --brightness 0.4 0.4 0.4 \
     --contrast 0.4 \
     --saturation 0.2 \
     --hue 0.1 \
@@ -38,8 +37,8 @@ python3 ../../../main_pretrain.py \
     --rda_magnitude 9 \
     --ada_policy imagenet \
     --fda_policy imagenet \
-    --num_crops_per_aug 1 1 1 1\
-    --name MASSL-resnet50-imagenet-300ep \
+    --num_crops_per_aug 1 1 1 \
+    --name MASSL_newDesign_norm-resnet50-imagenet-300ep \
     --entity mlbrl \
     --project solo_MASSL \
     --wandb \
