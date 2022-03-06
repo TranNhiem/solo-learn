@@ -50,7 +50,7 @@ from solo.utils.classification_dataloader import prepare_data as prepare_data_cl
 from solo.utils.pretrain_dataloader import (
     prepare_dataloader,
     prepare_datasets,
-    prepare_n_crop_transform,
+    prepare_n_crop_transform_v1
     prepare_transform,
 )
 
@@ -82,7 +82,7 @@ def main():
         # asymmetric augmentations
         if args.unique_augs > 1:  # note : --brightness 0.4 0.4 0.4 0.4 \  # 4 params to bypass inner chk mechnaism in sh file
             # pluggin proposed multiple-DA
-            if args.dataset == "mulda":
+            if args.dataset == "mulda" or "mulda_v1":
                 transform = prepare_transform(args.dataset, args.transform_kwargs, args.mulda_kwargs) 
             else: # normal case, this way plz ~ ~
                 transform = [
@@ -96,7 +96,7 @@ def main():
         
 
 
-        transform = prepare_n_crop_transform(transform, num_crops_per_aug=args.num_crops_per_aug)
+        transform = prepare_n_crop_transform_1(transform, num_crops_per_aug=args.num_crops_per_aug)
         
         if args.debug_augmentations:
             print("Transforms:")
@@ -119,7 +119,7 @@ def main():
 
     ## pluggin proposed multiple-DA
     # i'm not sure about the below line, but i also add our ds into it!!
-    elif args.dataset in ["imagenet100", "imagenet",   "mulda"] and args.val_dir is None:
+    elif args.dataset in ["imagenet100", "imagenet",   "mulda", "mulda_v1"] and args.val_dir is None:
         val_loader = None
     else:
         _, val_loader = prepare_data_classification(

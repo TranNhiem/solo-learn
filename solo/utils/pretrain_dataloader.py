@@ -28,6 +28,8 @@ from PIL import Image, ImageFilter, ImageOps
 from torch.utils.data import DataLoader
 from torch.utils.data.dataset import Dataset
 from torchvision import transforms
+from torchvision import transforms as T
+
 from torchvision.datasets import STL10, ImageFolder
 
 # pluggin multiple DA support
@@ -135,6 +137,7 @@ class NCropAugmentation:
         Returns:
             List[torch.Tensor]: an image in the tensor format.
         """
+        # this case self num_crop only
         return [self.transform(x) for _ in range(self.num_crops)]
 
     def __repr__(self) -> str:
@@ -163,6 +166,78 @@ class FullTransformPipeline:
 
     def __repr__(self) -> str:
         return "\n".join([str(transform) for transform in self.transforms])
+
+class FullTransformPipeline_v1:
+    def __init__(self, transforms: Callable) -> None:
+        self.transforms = transforms
+
+    def __call__(self, x: Image) -> List[torch.Tensor]:
+        """Applies transforms n times to generate n crops.
+
+        Args:
+            x (Image): an image in the PIL.Image format.
+
+        Returns:
+            List[torch.Tensor]: an image in the tensor format.
+        """
+        # Try to generate Crop for 2
+        crop_inception = T.RandomResizedCrop(
+            size=224,
+            interpolation=transforms.InterpolationMode.BICUBIC
+        )
+
+        x1 = crop_inception(x)
+        x2 = crop_inception(x)
+        out = []
+        for idx, transform in enumerate(self.transforms):
+          
+            out.extend(transform(x1))
+            out.extend(transform(x2))
+        random.shuffle(out)
+        return out
+
+    def __repr__(self) -> str:
+        return "\n".join([str(transform) for transform in self.transforms])
+
+def prepare_n_crop_transform(
+    transforms: List[Callable], num_crops_per_aug: List[int]
+) -> NCropAugmentation:
+    """Turns a single crop transformation to an N crops transformation.
+
+    Args:
+        transforms (List[Callable]): list of transformations.
+        num_crops_per_aug (List[int]): number of crops per pipeline.
+
+    Returns:
+        NCropAugmentation: an N crop transformation.
+    """
+
+    assert len(transforms) == len(num_crops_per_aug)
+
+    T = []
+    for transform, num_crops in zip(transforms, num_crops_per_aug):
+        T.append(NCropAugmentation(transform, num_crops))
+    return FullTransformPipeline(T)
+
+def prepare_n_crop_transform_v1(
+    transforms: List[Callable], num_crops_per_aug: List[int]
+) -> NCropAugmentation:
+    """Turns a single crop transformation to an N crops transformation.
+
+    Args:
+        transforms (List[Callable]): list of transformations.
+        num_crops_per_aug (List[int]): number of crops per pipeline.
+
+    Returns:
+        NCropAugmentation: an N crop transformation.
+    """
+
+    assert len(transforms) == len(num_crops_per_aug)
+
+    T = []
+    for transform, num_crops in zip(transforms, num_crops_per_aug):
+        T.append(NCropAugmentation(transform, num_crops))
+    return FullTransformPipeline_v1(T)
 
 
 class BaseTransform:
@@ -430,6 +505,66 @@ class CustomTransform(BaseTransform):
             ]
         )
 
+class CustomTransform_no_crop(BaseTransform):
+    def __init__(
+        self,
+        brightness: float,
+        contrast: float,
+        saturation: float,
+        hue: float,
+        color_jitter_prob: float = 0.8,
+        gray_scale_prob: float = 0.2,
+        horizontal_flip_prob: float = 0.5,
+        gaussian_prob: float = 0.5,
+        solarization_prob: float = 0.0,
+        min_scale: float = 0.08,
+        max_scale: float = 1.0,
+        crop_size: int = 224,
+        mean: Sequence[float] = (0.485, 0.456, 0.406),
+        std: Sequence[float] = (0.228, 0.224, 0.225),
+    ):
+        """Class that applies Custom transformations.
+        If you want to do exoteric augmentations, you can just re-write this class.
+
+        Args:
+            brightness (float): sampled uniformly in [max(0, 1 - brightness), 1 + brightness].
+            contrast (float): sampled uniformly in [max(0, 1 - contrast), 1 + contrast].
+            saturation (float): sampled uniformly in [max(0, 1 - saturation), 1 + saturation].
+            hue (float): sampled uniformly in [-hue, hue].
+            color_jitter_prob (float, optional): probability of applying color jitter.
+                Defaults to 0.8.
+            gray_scale_prob (float, optional): probability of converting to gray scale.
+                Defaults to 0.2.
+            horizontal_flip_prob (float, optional): probability of flipping horizontally.
+                Defaults to 0.5.
+            gaussian_prob (float, optional): probability of applying gaussian blur.
+                Defaults to 0.0.
+            solarization_prob (float, optional): probability of applying solarization.
+                Defaults to 0.0.
+            min_scale (float, optional): minimum scale of the crops. Defaults to 0.08.
+            max_scale (float, optional): maximum scale of the crops. Defaults to 1.0.
+            crop_size (int, optional): size of the crop. Defaults to 224.
+            mean (Sequence[float], optional): mean values for normalization.
+                Defaults to (0.485, 0.456, 0.406).
+            std (Sequence[float], optional): std values for normalization.
+                Defaults to (0.228, 0.224, 0.225).
+        """
+
+        super().__init__()
+        self.transform = transforms.Compose(
+            [
+                transforms.RandomApply(
+                    [transforms.ColorJitter(brightness, contrast, saturation, hue)],
+                    p=color_jitter_prob,
+                ),
+                transforms.RandomGrayscale(p=gray_scale_prob),
+                transforms.RandomApply([GaussianBlur()], p=gaussian_prob),
+                transforms.RandomApply([Solarization()], p=solarization_prob),
+                transforms.RandomHorizontalFlip(p=horizontal_flip_prob),
+                transforms.ToTensor(),
+                transforms.Normalize(mean=mean, std=std),
+            ]
+        )
 
 def prepare_transform(dataset: str, trfs_kwargs, da_kwargs=None) -> Any:
     """Prepares transforms for a specific dataset. Optionally uses multi crop.
@@ -451,6 +586,7 @@ def prepare_transform(dataset: str, trfs_kwargs, da_kwargs=None) -> Any:
         return CustomTransform(**trfs_kwargs)
 
     # pluggin proposed multiple-DA
+    
     elif dataset == "mulda":
         policy_dict = {'imagenet':auto_aug.AutoAugmentPolicy.IMAGENET}
         ## DA args def :
@@ -470,31 +606,36 @@ def prepare_transform(dataset: str, trfs_kwargs, da_kwargs=None) -> Any:
         fast_da = Fast_AutoAugment(policy_type=fda_policy).get_trfs(rnd_crp)
         
         #  ret [simclr_da, rand_da, auto_da, fast_da]  4 views trfs
-        return [ CustomTransform(**trfs_kwargs), rand_da, auto_da, rand_da ]#fast_da
+        return [CustomTransform(**trfs_kwargs), rand_da, auto_da, fast_da ]#fast_da
+       
+    
+    elif dataset == "mulda_v1":
+        """
+        mulda_v1 --> is the version removing Random Crop. 
+        The cropping is Performed in FullTransformPipeline_v1
+        x--> X1, X2 --> as the result each Augmentations also Generate two version
+        --> Current Implementation X--> X1, X2 --> Then Apply augmentation
+        """
+
+        policy_dict = {'imagenet':auto_aug.AutoAugmentPolicy.IMAGENET}
+        ## DA args def :
+        num_ops, magnitude = da_kwargs['rda_num_ops'], da_kwargs['rda_magnitude']
+        ada_policy = policy_dict[ da_kwargs['ada_policy'] ]
+        fda_policy = da_kwargs['fda_policy']
+        # common crop settings : 
+
+        # prepare various da
+        auto_da = transforms.Compose( [ auto_aug.AutoAugment(policy=ada_policy), transforms.ToTensor()] )
+        
+        rand_da = transforms.Compose( [auto_aug.RandAugment(num_ops=num_ops, magnitude=magnitude), transforms.ToTensor()] )
+        fast_da = Fast_AutoAugment(policy_type=fda_policy)
+        
+        #  ret [simclr_da, rand_da, auto_da, fast_da]  4 views trfs
+        return [ CustomTransform_no_crop(**trfs_kwargs), rand_da, auto_da, fast_da ]
+        
         
     else:
         raise ValueError(f"{dataset} is not currently supported.")
-
-
-def prepare_n_crop_transform(
-    transforms: List[Callable], num_crops_per_aug: List[int]
-) -> NCropAugmentation:
-    """Turns a single crop transformation to an N crops transformation.
-
-    Args:
-        transforms (List[Callable]): list of transformations.
-        num_crops_per_aug (List[int]): number of crops per pipeline.
-
-    Returns:
-        NCropAugmentation: an N crop transformation.
-    """
-
-    assert len(transforms) == len(num_crops_per_aug)
-
-    T = []
-    for transform, num_crops in zip(transforms, num_crops_per_aug):
-        T.append(NCropAugmentation(transform, num_crops))
-    return FullTransformPipeline(T)
 
 
 def prepare_datasets(
@@ -561,7 +702,7 @@ def prepare_datasets(
     
     ## pluggin support code snippet
     #  only support imagenet/imagenet100 ds
-    elif dataset == "mulda":
+    elif dataset == "mulda" or "mulda_v1":
         train_dir = data_dir / train_dir
         train_dataset = dataset_with_index(ImageFolder)(train_dir, transform)
 
