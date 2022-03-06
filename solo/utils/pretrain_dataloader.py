@@ -29,6 +29,8 @@ from torch.utils.data import DataLoader
 from torch.utils.data.dataset import Dataset
 from torchvision import transforms
 from torchvision import transforms as T
+import PIL
+import numpy as np
 
 from torchvision.datasets import STL10, ImageFolder
 
@@ -181,13 +183,17 @@ class FullTransformPipeline_v1:
             List[torch.Tensor]: an image in the tensor format.
         """
         # Try to generate Crop for 2
-        crop_inception = T.RandomResizedCrop(
-            size=224,
-            interpolation=transforms.InterpolationMode.BICUBIC
-        )
 
+        # crop_inception = T.Compose([T.RandomResizedCrop(
+        #     size=224,
+        #     interpolation=T.InterpolationMode.BICUBIC
+        # )])#,T.ToTensor()
+        crop_inception=T.Compose([T.RandomResizedCrop(size=224,
+             interpolation=T.InterpolationMode.BICUBIC)])
         x1 = crop_inception(x)
+        x1=PIL.Image.fromarray(np.uint8(x1))
         x2 = crop_inception(x)
+        x2=PIL.Image.fromarray(np.uint8(x2))
         out = []
         for idx, transform in enumerate(self.transforms):
           
@@ -631,7 +637,7 @@ def prepare_transform(dataset: str, trfs_kwargs, da_kwargs=None) -> Any:
         fast_da = Fast_AutoAugment(policy_type=fda_policy).get_trfs
         
         #  ret [simclr_da, rand_da, auto_da, fast_da]  4 views trfs
-        return [ CustomTransform_no_crop(**trfs_kwargs), rand_da, auto_da, fast_da ]
+        return [ CustomTransform_no_crop(**trfs_kwargs),rand_da, auto_da]#fast_da
         
         
     else:

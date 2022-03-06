@@ -129,7 +129,7 @@ class MASSL_edit(BaseMomentumMethod):
         
         neg_cos_sim = 0
         ## If the Multi View the Loop Iteratively Corresponding 
-        for v1 in range(self.num_large_crops*2):
+        for v1 in range(self.num_large_crops):
             # Views 2 remove the prior Views
             for v2 in np.delete(range(self.num_crops), v1):
                 neg_cos_sim += byol_loss_func(P[v2], Z_momentum[v1], )
