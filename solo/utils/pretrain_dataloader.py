@@ -628,7 +628,7 @@ def prepare_transform(dataset: str, trfs_kwargs, da_kwargs=None) -> Any:
         auto_da = transforms.Compose( [ auto_aug.AutoAugment(policy=ada_policy), transforms.ToTensor()] )
         
         rand_da = transforms.Compose( [auto_aug.RandAugment(num_ops=num_ops, magnitude=magnitude), transforms.ToTensor()] )
-        fast_da = Fast_AutoAugment(policy_type=fda_policy)
+        fast_da = Fast_AutoAugment(policy_type=fda_policy).get_trfs
         
         #  ret [simclr_da, rand_da, auto_da, fast_da]  4 views trfs
         return [ CustomTransform_no_crop(**trfs_kwargs), rand_da, auto_da, fast_da ]
