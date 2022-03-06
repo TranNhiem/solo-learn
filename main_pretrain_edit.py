@@ -50,7 +50,7 @@ from solo.utils.classification_dataloader import prepare_data as prepare_data_cl
 from solo.utils.pretrain_dataloader import (
     prepare_dataloader,
     prepare_datasets,
-    prepare_n_crop_transform_v1
+    prepare_n_crop_transform_v1,
     prepare_transform,
 )
 
@@ -96,7 +96,7 @@ def main():
         
 
 
-        transform = prepare_n_crop_transform_1(transform, num_crops_per_aug=args.num_crops_per_aug)
+        transform = prepare_n_crop_transform_v1(transform, num_crops_per_aug=args.num_crops_per_aug)
         
         if args.debug_augmentations:
             print("Transforms:")
