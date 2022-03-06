@@ -112,6 +112,7 @@ class BaseMethod(pl.LightningModule):
         lr_decay_steps: Sequence = None,
         knn_eval: bool = False,
         knn_k: int = 20,
+        MASSL_new: bool =True,
         **kwargs,
     ):
         """Base model that implements all basic operations for all self-supervised methods.
@@ -191,8 +192,20 @@ class BaseMethod(pl.LightningModule):
         self.min_lr = min_lr
         self.warmup_start_lr = warmup_start_lr
         self.warmup_epochs = warmup_epochs
+<<<<<<< HEAD
         self.num_large_crops = num_large_crops*2 # Attention at this Part Need update for Automatic Configure
         self.num_small_crops = num_small_crops*2 #num_small_crops *2
+=======
+        self.MASSL_new= MASSL_new
+        if self.MASSL_new:
+            print("Hooray You implement new design")
+            self.num_large_crops = num_large_crops*2 # Attention at this Part Need update for Automatic Configure
+            self.num_small_crops = num_small_crops*2 #num_small_crops *2
+        else: 
+            print("MASSL Old design")
+            self.num_large_crops = num_large_crops
+            self.num_small_crops = num_small_crops
+>>>>>>> 5ca1b247415e44e8f9481824751e9b12695a18d7
         self.eta_lars = eta_lars
         self.grad_clip_lars = grad_clip_lars
         self.knn_eval = knn_eval

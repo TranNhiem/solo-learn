@@ -90,13 +90,14 @@ def main():
                 ]
         else:
             transform = [prepare_transform(args.dataset, args.transform_kwargs)]
-            
+        ## My Goal is Get X--> Crop it --> Two crop --> Transform   
 
 
         
 
 
         transform = prepare_n_crop_transform(transform, num_crops_per_aug=args.num_crops_per_aug)
+        
         if args.debug_augmentations:
             print("Transforms:")
             pprint(transform)
