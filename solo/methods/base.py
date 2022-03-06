@@ -192,10 +192,6 @@ class BaseMethod(pl.LightningModule):
         self.min_lr = min_lr
         self.warmup_start_lr = warmup_start_lr
         self.warmup_epochs = warmup_epochs
-<<<<<<< HEAD
-        self.num_large_crops = num_large_crops*2 # Attention at this Part Need update for Automatic Configure
-        self.num_small_crops = num_small_crops*2 #num_small_crops *2
-=======
         self.MASSL_new= MASSL_new
         if self.MASSL_new:
             print("Hooray You implement new design")
@@ -205,7 +201,6 @@ class BaseMethod(pl.LightningModule):
             print("MASSL Old design")
             self.num_large_crops = num_large_crops
             self.num_small_crops = num_small_crops
->>>>>>> 5ca1b247415e44e8f9481824751e9b12695a18d7
         self.eta_lars = eta_lars
         self.grad_clip_lars = grad_clip_lars
         self.knn_eval = knn_eval

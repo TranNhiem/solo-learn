@@ -592,12 +592,8 @@ def prepare_transform(dataset: str, trfs_kwargs, da_kwargs=None) -> Any:
         return CustomTransform(**trfs_kwargs)
 
     # pluggin proposed multiple-DA
-<<<<<<< HEAD
-    elif dataset == "mulda":  # fix-version : add norm of imagenet spec
-=======
     
     elif dataset == "mulda":
->>>>>>> 5ca1b247415e44e8f9481824751e9b12695a18d7
         policy_dict = {'imagenet':auto_aug.AutoAugmentPolicy.IMAGENET}
         ## DA args def :
         num_ops, magnitude = da_kwargs['rda_num_ops'], da_kwargs['rda_magnitude']
@@ -619,35 +615,6 @@ def prepare_transform(dataset: str, trfs_kwargs, da_kwargs=None) -> Any:
         
         #  ret [simclr_da, rand_da, auto_da, fast_da]  4 views trfs
         return [CustomTransform(**trfs_kwargs), rand_da, auto_da, fast_da ]#fast_da
-<<<<<<< HEAD
-=======
-       
-    
-    elif dataset == "mulda_v1":
-        """
-        mulda_v1 --> is the version removing Random Crop. 
-        The cropping is Performed in FullTransformPipeline_v1
-        x--> X1, X2 --> as the result each Augmentations also Generate two version
-        --> Current Implementation X--> X1, X2 --> Then Apply augmentation
-        """
-
-        policy_dict = {'imagenet':auto_aug.AutoAugmentPolicy.IMAGENET}
-        ## DA args def :
-        num_ops, magnitude = da_kwargs['rda_num_ops'], da_kwargs['rda_magnitude']
-        ada_policy = policy_dict[ da_kwargs['ada_policy'] ]
-        fda_policy = da_kwargs['fda_policy']
-        # common crop settings : 
-
-        # prepare various da
-        auto_da = transforms.Compose( [ auto_aug.AutoAugment(policy=ada_policy), transforms.ToTensor()] )
-        
-        rand_da = transforms.Compose( [auto_aug.RandAugment(num_ops=num_ops, magnitude=magnitude), transforms.ToTensor()] )
-        fast_da = Fast_AutoAugment(policy_type=fda_policy).get_trfs
-        
-        #  ret [simclr_da, rand_da, auto_da, fast_da]  4 views trfs
-        return [ CustomTransform_no_crop(**trfs_kwargs),rand_da, auto_da]#fast_da
-        
->>>>>>> 5ca1b247415e44e8f9481824751e9b12695a18d7
         
     else:
         raise ValueError(f"{dataset} is not currently supported.")
