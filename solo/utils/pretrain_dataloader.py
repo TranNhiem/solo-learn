@@ -605,7 +605,7 @@ def prepare_transform(dataset: str, trfs_kwargs, da_kwargs=None) -> Any:
             scale=(trfs_kwargs['min_scale'], trfs_kwargs['max_scale']),
             interpolation=transforms.InterpolationMode.BICUBIC
         )
-        mean: = (0.485, 0.456, 0.406)
+        mean = (0.485, 0.456, 0.406)
         std = (0.228, 0.224, 0.225)
         # prepare various da
         auto_da = transforms.Compose( [rnd_crp, auto_aug.AutoAugment(policy=ada_policy), transforms.ToTensor(), transforms.Normalize(mean=mean, std=std)] )
