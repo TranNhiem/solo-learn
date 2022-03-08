@@ -6,7 +6,7 @@
 import logging
 import os
 
-from downstream.linear_classification.configs.attr_dict import AttrDict
+from downstream.configs.attr_dict import AttrDict
 
 
 def set_env_vars(local_rank: int, node_id: int, cfg: AttrDict):
