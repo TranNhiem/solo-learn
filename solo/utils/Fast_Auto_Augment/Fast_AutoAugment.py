@@ -59,8 +59,7 @@ class Fast_AutoAugment(object):
 
         return ds_policies
 
-    def get_trfs(self, trfs):
-        self.trfs_cntr.transforms.insert(0, trfs)
+    def get_trfs(self):
         return self.trfs_cntr
 
 

@@ -608,11 +608,8 @@ def prepare_transform(dataset: str, trfs_kwargs, da_kwargs=None) -> Any:
             scale=(trfs_kwargs['min_scale'], trfs_kwargs['max_scale']),
             interpolation=transforms.InterpolationMode.BICUBIC
         )
-<<<<<<< HEAD
-=======
         mean = (0.485, 0.456, 0.406)
         std = (0.228, 0.224, 0.225)
->>>>>>> 0c0dc9838e18af5b3fa0da10889a0ed83db441f6
         # prepare various da
         auto_da = transforms.Compose( [rnd_crp, auto_aug.AutoAugment(policy=ada_policy), transforms.ToTensor(), transforms.Normalize(mean=mean, std=std)] )
         
@@ -621,12 +618,6 @@ def prepare_transform(dataset: str, trfs_kwargs, da_kwargs=None) -> Any:
         
         #  ret [simclr_da, rand_da, auto_da, fast_da]  4 views trfs
         return [CustomTransform(**trfs_kwargs), rand_da, auto_da, fast_da ]#fast_da
-<<<<<<< HEAD
-       
-    
-=======
-
->>>>>>> 0c0dc9838e18af5b3fa0da10889a0ed83db441f6
     elif dataset == "mulda_v1":
         """
         mulda_v1 --> is the version removing Random Crop. 
@@ -640,33 +631,17 @@ def prepare_transform(dataset: str, trfs_kwargs, da_kwargs=None) -> Any:
         num_ops, magnitude = da_kwargs['rda_num_ops'], da_kwargs['rda_magnitude']
         ada_policy = policy_dict[ da_kwargs['ada_policy'] ]
         fda_policy = da_kwargs['fda_policy']
-<<<<<<< HEAD
-        mean = (0.485, 0.456, 0.406)
-        std = (0.228, 0.224, 0.225)
-
-        # prepare various da
-        auto_da = transforms.Compose( [ auto_aug.AutoAugment(policy=ada_policy), transforms.ToTensor(),transforms.Normalize(mean=mean, std=std)] )
-        
-        rand_da = transforms.Compose( [auto_aug.RandAugment(num_ops=num_ops, magnitude=magnitude), transforms.ToTensor(),transforms.Normalize(mean=mean, std=std)] )
-        # if you want to call FastAA, you should perform : Fast_AutoAugment(policy_type=fda_policy).get_trfs()
-        # norm also already perform inside..
-        fast_da = Fast_AutoAugment(policy_type=fda_policy).get_trfs()
-        
-        #  ret [simclr_da, rand_da, auto_da, fast_da]  4 views trfs
-        return [ CustomTransform_no_crop(**trfs_kwargs),rand_da, auto_da]#fast_da
-=======
         # common crop settings : 
 
         # prepare various da
         auto_da = transforms.Compose( [ auto_aug.AutoAugment(policy=ada_policy), transforms.ToTensor()] )
         
         rand_da = transforms.Compose( [auto_aug.RandAugment(num_ops=num_ops, magnitude=magnitude), transforms.ToTensor()] )
-        fast_da = Fast_AutoAugment(policy_type=fda_policy).get_trfs
+        fast_da = Fast_AutoAugment(policy_type=fda_policy).get_trfs()
         
         #  ret [simclr_da, rand_da, auto_da, fast_da]  4 views trfs
-        return [ CustomTransform_no_crop(**trfs_kwargs), rand_da, auto_da,fast_da ]#fast_da
+        return [ CustomTransform_no_crop(**trfs_kwargs), rand_da, auto_da, fast_da ]#fast_da
         
->>>>>>> 0c0dc9838e18af5b3fa0da10889a0ed83db441f6
         
         
     else:
