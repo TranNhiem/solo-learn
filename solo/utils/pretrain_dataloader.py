@@ -638,7 +638,7 @@ def prepare_transform(dataset: str, trfs_kwargs, da_kwargs=None) -> Any:
         fast_da = Fast_AutoAugment(policy_type=fda_policy).get_trfs
         
         #  ret [simclr_da, rand_da, auto_da, fast_da]  4 views trfs
-        return [ CustomTransform_no_crop(**trfs_kwargs), rand_da, auto_da ]#fast_da
+        return [ CustomTransform_no_crop(**trfs_kwargs), rand_da, auto_da,fast_da ]#fast_da
         
         
         
