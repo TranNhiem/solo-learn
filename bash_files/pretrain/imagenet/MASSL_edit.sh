@@ -4,7 +4,7 @@ python3 ../../../main_pretrain_edit.py \
     --data_dir /data1/1K_New/ \
     --train_dir train \
     --val_dir val \
-    --max_epochs 300 \
+    --max_epochs 1000 \
     --gpus 0,1,2,3,4,5,6,7 \
     --strategy ddp \
     --sync_batchnorm \
@@ -28,7 +28,7 @@ python3 ../../../main_pretrain_edit.py \
     --gray_scale_prob 0.2 \
     --horizontal_flip_prob 0.5 \
     --gaussian_prob 1.0  \
-    --solarization_prob 0.0  \
+    --solarization_prob 0.2  \
     --crop_size 224 \
     --min_scale 0.08 \
     --max_scale 1.0 \
@@ -36,7 +36,7 @@ python3 ../../../main_pretrain_edit.py \
     --rda_magnitude 9 \
     --ada_policy imagenet \
     --fda_policy imagenet \
-    --num_crops_per_aug 1 1 1 \
+    --num_crops_per_aug 1 1 1  \
     --name MASSL_newDesign-resnet50-imagenet-1000ep \
     --entity mlbrl \
     --project solo_MASSL \
