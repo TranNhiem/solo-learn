@@ -1,5 +1,8 @@
 python3 ../../../main_pretrain_edit.py \
     --dataset mulda_v1 \
+    --backbone resnet50 \
+    --data_dir /data1/1K_New/ \
+    --train_dir train \
     --val_dir val \
     --max_epochs 300 \
     --gpus 0,1,2,3,4,5,6,7 \
@@ -11,8 +14,8 @@ python3 ../../../main_pretrain_edit.py \
     --eta_lars 0.001 \
     --exclude_bias_n_norm \
     --scheduler warmup_cosine \
-    --lr 0.3 \
-    --accumulate_grad_batches 1 \
+    --lr 0.5 \
+    --accumulate_grad_batche 2 \
     --classifier_lr 0.2 \
     --weight_decay 1e-6 \
     --batch_size 256 \
@@ -34,7 +37,7 @@ python3 ../../../main_pretrain_edit.py \
     --ada_policy imagenet \
     --fda_policy imagenet \
     --num_crops_per_aug 1 1 1 \
-    --name MASSL_newDesign-resnet50-imagenet-300ep \
+    --name MASSL_newDesign-resnet50-imagenet-1000ep \
     --entity mlbrl \
     --project solo_MASSL \
     --wandb \

@@ -191,12 +191,11 @@ class FullTransformPipeline_v1:
         crop_inception=T.Compose([T.RandomResizedCrop(size=224,
              interpolation=T.InterpolationMode.BICUBIC)])
         x1 = crop_inception(x)
-        x1=PIL.Image.fromarray(np.uint8(x1))
+        #x1=PIL.Image.fromarray(np.uint8(x1))
         x2 = crop_inception(x)
-        x2=PIL.Image.fromarray(np.uint8(x2))
+        #x2=PIL.Image.fromarray(np.uint8(x2))
         out = []
         for idx, transform in enumerate(self.transforms):
-          
             out.extend(transform(x1))
             out.extend(transform(x2))
         random.shuffle(out)
@@ -463,7 +462,8 @@ class CustomTransform(BaseTransform):
         mean: Sequence[float] = (0.485, 0.456, 0.406),
         std: Sequence[float] = (0.228, 0.224, 0.225),
     ):
-        """Class that applies Custom transformations.
+        """
+        Class that applies Custom transformations.
         If you want to do exoteric augmentations, you can just re-write this class.
 
         Args:
