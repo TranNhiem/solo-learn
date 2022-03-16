@@ -1,6 +1,5 @@
 python3 ../../../main_pretrain.py \
     --dataset mulda \
-    --MASSL_new False \
     --backbone resnet50 \
     --data_dir /data/ \
     --train_dir train \

@@ -600,13 +600,14 @@ def prepare_transform(dataset: str, trfs_kwargs, da_kwargs=None) -> Any:
         ada_policy = policy_dict[ da_kwargs['ada_policy'] ]
         fda_policy = da_kwargs['fda_policy']
         # common crop settings : 
+        mean = (0.485, 0.456, 0.406)
+        std = (0.228, 0.224, 0.225)
+
         rnd_crp = transforms.RandomResizedCrop(
             trfs_kwargs['crop_size'],
             scale=(trfs_kwargs['min_scale'], trfs_kwargs['max_scale']),
             interpolation=transforms.InterpolationMode.BICUBIC
         )
-        mean: = (0.485, 0.456, 0.406)
-        std = (0.228, 0.224, 0.225)
         # prepare various da
         auto_da = transforms.Compose( [rnd_crp, auto_aug.AutoAugment(policy=ada_policy), transforms.ToTensor(), transforms.Normalize(mean=mean, std=std)] )
         
@@ -615,6 +616,35 @@ def prepare_transform(dataset: str, trfs_kwargs, da_kwargs=None) -> Any:
         
         #  ret [simclr_da, rand_da, auto_da, fast_da]  4 views trfs
         return [CustomTransform(**trfs_kwargs), rand_da, auto_da, fast_da ]#fast_da
+       
+    
+    elif dataset == "mulda_v1":
+        """
+        mulda_v1 --> is the version removing Random Crop. 
+        The cropping is Performed in FullTransformPipeline_v1
+        x--> X1, X2 --> as the result each Augmentations also Generate two version
+        --> Current Implementation X--> X1, X2 --> Then Apply augmentation
+        """
+
+        policy_dict = {'imagenet':auto_aug.AutoAugmentPolicy.IMAGENET}
+        ## DA args def :
+        num_ops, magnitude = da_kwargs['rda_num_ops'], da_kwargs['rda_magnitude']
+        ada_policy = policy_dict[ da_kwargs['ada_policy'] ]
+        fda_policy = da_kwargs['fda_policy']
+        mean = (0.485, 0.456, 0.406)
+        std = (0.228, 0.224, 0.225)
+
+        # prepare various da
+        auto_da = transforms.Compose( [ auto_aug.AutoAugment(policy=ada_policy), transforms.ToTensor(),transforms.Normalize(mean=mean, std=std)] )
+        
+        rand_da = transforms.Compose( [auto_aug.RandAugment(num_ops=num_ops, magnitude=magnitude), transforms.ToTensor(),transforms.Normalize(mean=mean, std=std)] )
+        # if you want to call FastAA, you should perform : Fast_AutoAugment(policy_type=fda_policy).get_trfs()
+        # norm also already perform inside..
+        fast_da = Fast_AutoAugment(policy_type=fda_policy).get_trfs()
+        
+        #  ret [simclr_da, rand_da, auto_da, fast_da]  4 views trfs
+        return [ CustomTransform_no_crop(**trfs_kwargs),rand_da, auto_da]#fast_da
+        
         
     else:
         raise ValueError(f"{dataset} is not currently supported.")

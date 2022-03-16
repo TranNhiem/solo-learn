@@ -30,14 +30,11 @@ class Fast_AutoAugment(object):
 
     def __init__(self, policy_type="imagenet"):
         # preprocess..
+        mean = (0.485, 0.456, 0.406)
+        std = (0.228, 0.224, 0.225)
         self.trfs_cntr = transforms.Compose([
-            #transforms.RandomHorizontalFlip(),
-            #transforms.ColorJitter(
-            #    brightness=0.4,
-            #    contrast=0.4,
-            #    saturation=0.4,
-            #),
             transforms.ToTensor(),
+            transforms.Normalize(mean=mean, std=std)
         ])
 
         if policy_type == "imagenet":
@@ -50,7 +47,7 @@ class Fast_AutoAugment(object):
             raise ValueError("The policies of indicated dataset have not been searched")
         
         self.policy_type = policy_type
-        self.trfs_cntr.transforms.insert(-1, ds_policies)
+        self.trfs_cntr.transforms.insert(0, ds_policies)
 
     def prnt_policies(self):
         if self.policy_type == "imagenet":

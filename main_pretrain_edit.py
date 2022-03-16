@@ -90,15 +90,8 @@ def main():
                 ]
         else:
             transform = [prepare_transform(args.dataset, args.transform_kwargs)]
-<<<<<<< HEAD
-=======
         ## My Goal is Get X--> Crop it --> Two crop --> Transform   
-
-
         
-
->>>>>>> 5ca1b247415e44e8f9481824751e9b12695a18d7
-
         transform = prepare_n_crop_transform_v1(transform, num_crops_per_aug=args.num_crops_per_aug)
         
         if args.debug_augmentations:

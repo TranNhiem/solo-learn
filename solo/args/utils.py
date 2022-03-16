@@ -32,10 +32,6 @@ N_CLASSES_PER_DATASET = {
     ## cfg same as imagenet
     "mulda": 1000,
     "mulda_v1": 1000,
-<<<<<<< HEAD
-=======
-
->>>>>>> 5ca1b247415e44e8f9481824751e9b12695a18d7
 }
 
 

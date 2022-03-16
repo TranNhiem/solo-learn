@@ -1,8 +1,12 @@
 python3 ../../../main_pretrain_edit.py \
     --dataset mulda_v1 \
+    --backbone resnet50 \
+    --data_dir /data/ \
+    --train_dir train \
     --val_dir val \
     --max_epochs 300 \
     --gpus 0,1,2,3,4,5,6,7 \
+    --accelerator gpu \
     --strategy ddp \
     --sync_batchnorm \
     --precision 16 \
@@ -34,13 +38,13 @@ python3 ../../../main_pretrain_edit.py \
     --ada_policy imagenet \
     --fda_policy imagenet \
     --num_crops_per_aug 1 1 1 \
-    --name MASSL_newDesign-resnet50-imagenet-300ep \
+    --name MASSL_newDesign_3MLP-resnet50-imagenet-300ep \
     --entity mlbrl \
     --project solo_MASSL \
     --wandb \
     --save_checkpoint \
     --method massl_edit \
-    --proj_output_dim 256 \
+    --proj_output_dim 512 \
     --proj_hidden_dim 4096 \
     --pred_hidden_dim 4096 \
     --base_tau_momentum 0.99 \
